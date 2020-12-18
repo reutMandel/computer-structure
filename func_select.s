@@ -94,7 +94,12 @@ format2:	  .string	"old char: %c, new char: %c, first string: %s, second string:
 
 # case 55
 .L5:
-   add $20, %eax
+  
+   movq  %rsi,  %rdi    # move pstring 1 to rdi
+   movq  %rdx,  %rsi    # move pstring 2 to rsi
+   movb  $1,    %dl
+   movb  $3,    %cl
+   call pstrijcmp
    jmp .L8
 
 # default
