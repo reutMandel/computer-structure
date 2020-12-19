@@ -1,12 +1,11 @@
     .section .rodata
 format_in_char: .string	" %c"
-format_in_int:  .string	" %d"
+format_in_int:  .string	"%d"
 format1:	  .string	"first pstring length: %d, second pstring length: %d\n"
 format2:	  .string	"old char: %c, new char: %c, first string: %s, second string: %s\n"
 format3:   .string   "length: %d, string: %s\n"
 format4:   .string   "compare result: %d\n"
 format5:	  .string	"invalid input!\n"
-
 
     .align 8 # Align address to multiple of 8
 .JMP_TABLE:
@@ -95,7 +94,7 @@ format5:	  .string	"invalid input!\n"
 
    # call scanf for first index (i)
    movq $format_in_int, %rdi  # the string is the first paramter passed to the scanf function.
-   leaq -8(%rbp),       %rsi  # mov first place to %rsi 
+   movq -8(%rbp),       %rsi  # mov first place to %rsi 
    movq $0, %rax              # initiliaze %rax
    call scanf 
    
@@ -211,6 +210,8 @@ format5:	  .string	"invalid input!\n"
 
 # return
 .FINISH_SWITCH:
+   
+   #popq %rbx              # restore %rbx
    leave
    ret
 
@@ -222,6 +223,7 @@ run_func:
 
     pushq   %rbp            # saving the old frame pointer.
     movq    %rsp,  %rbp     # creating the new frame pointer.
+   #pushq   %rbx            # backup callee - save %rbx
     movl    %edi,  %eax     
     sub     $50,   %eax     # sub 10 from option
     cmpl    $10,   %eax     # compare option to 10
