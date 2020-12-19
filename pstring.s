@@ -141,7 +141,7 @@ swapCase:
 
 
 .globl	pstrijcmp
-        #this function swap lower to upper case and upper to lower case
+        #this function check which pstring is bigger in lexicographic order
 	    .type  pstrijcmp , @function
 pstrijcmp:
     
@@ -163,29 +163,53 @@ pstrijcmp:
    xorq   %r8,     %r8    # initilaize r8
    movb   %dl,     %r8b   # index iteration start in i
    xorq   %r9,     %r9    # initilaize r9
-
-  L13:
-
-
-     
+   pushq  %rbx            # backup callee - save %rbx
+   xorq   %rbx,    %rbx   # initilaize rbx               
 
 
-
+  .L14:
+   
+     cmpb  %cl, %r8b             # compare index iteration to j
+     ja    .L13                  # if index interation above j - finishd - go to L13
+     movb  (%rdi,%r8,1), %bl     # move current char from pstring 1 to %bl
+     cmpb  %bl, (%rsi,%r8,1)     # compare char in pstring 1 to char in pstring 2
+     je    .L15                  # if the two chars are equal - move to the next char
+     sub   (%rsi,%r8,1), %bl     # sub char in pstring 2 from char in pstring 1
+     testb  %bl,  %bl            # check if the sub result is negative or positive
+     js     .L16                 
+     jmp    .L17
     
 
-  L12:
-      
+   # negative result in sub
+  .L16:
+     movl $-1, %eax               # pstring 1 is small than pstring 2 
+     jmp .L13
+
+  # positive result in sub
+  .L17:
+     movl $1, %eax                # pstring 1 is bigger than pstring 2 
+     jmp .L13
+
+  #  increase index 
+  .L15: 
+      inc  %r8                    # increase index
+      jmp .L14                    # back to loop
+    
+  
+  # handle invalid arguments
+  .L12:
       # call printf - invalid arguments i or j
-      movq $format1, %rdi # the string is the first paramter passed to the printf function.
+      movq $format1, %rdi  # the string is the first paramter passed to the printf function.
       call printf
-    //  movb $-2  %al
-      jmp  .L13
+      movl $-2,  %eax       # put -2 in rax and return
+      jmp .L13
 
   .L13:
-
-     // movq %rsi, %rax     # mov dest pstring to rax
+      popq %rbx            # restore %rbx
       leave
       ret
+
+    
 
 
    
