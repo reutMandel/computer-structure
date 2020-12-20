@@ -46,41 +46,40 @@ format5:	  .string	"invalid input!\n"
 
    movq  %rsi, %r12       # save pstring 1 in callee save register
    movq  %rdx, %r13       # save pstring 2 in callee save register
-   sub   $16, %rsp        # place for the chars
-
-    # call scanf for first char
-   movq $format_in_char, %rdi  # the string is the first paramter passed to the scanf function.
-   movb -1(%rbp),   %sil  # mov first place to %rsi 
-   movq $0, %rax          # initiliaze %rax
-   call scanf 
-
-   xorb %bl, %bl     
-   movb %sil, %bl        # save first char in rbx
 
    # call scanf for first char
    movq $format_in_char, %rdi  # the string is the first paramter passed to the scanf function.
-   movb -1(%rbp),   %sil       # mov first place to %rsi 
+   leaq -8(%rbp),        %rsi  # put in rsi the adress of $rbp-8 for scanf
+   movq  $0,             %rax  # initiliaze %rax
+   call scanf 
+   
+   xorq  %rbx,    %rbx         # initiliaze %rbx
+   movb -8(%rbp), %bl          # save first char in bl
+
+   # call scanf for first char
+   movq $format_in_char, %rdi  # the string is the first paramter passed to the scanf function.
+   leaq -8(%rbp),        %rsi  # put in rsi the adress of $rbp-8 for scanf
    movq $0, %rax               # initiliaze %rax
    call scanf 
 
-   movb %sil, %dl              # move char 2 to rdx
-   movb %bl,  %sil             # move char 1 to rsi
+   movb -8(%rbp), %dl          # save scenod char in dl
+   movb %bl,  %sil             # move char 1 to sil
 
     # call to replace char for pstring 1
-   movq %r12, %rdi        # move pstring 1 to %rdi
-   movq $0, %rax          # initiliaze %rax
+   movq %r12, %rdi             # move pstring 1 to %rdi
+   movq $0, %rax               # initiliaze %rax
    call replaceChar
-   movq %rax, %r12        # save new pstring 1 in r12 - callee save
+   movq %rax, %r12             # save new pstring 1 in r12 - callee save
 
    # call to replace char for pstring 2
-   movq %r13, %rdi        # move pstring 1 to %rdi
-   movq $0, %rax          # initiliaze %rax
+   movq %r13, %rdi             # move pstring 1 to %rdi
+   movq $0, %rax               # initiliaze %rax
    call replaceChar
    
    # printing the new pstrings after replace char
-   leaq  1(%r12),  %rcx      # move new pstring 1 to rcx
-   leaq  1(%rax),  %r8       # move new pstring 2 to rcx
-   movq	$format2, %rdi      # the string is the first paramter passed to the printf function.
+   leaq  1(%r12),  %rcx        # move new pstring 1 to rcx
+   leaq  1(%rax),  %r8         # move new pstring 2 to r8
+   movq	$format2, %rdi        # the string is the first paramter passed to the printf function.
    call  printf
    
    jmp .FINISH_SWITCH
@@ -90,37 +89,37 @@ format5:	  .string	"invalid input!\n"
    
    movq  %rsi, %r12       # save pstring 1 in callee save register
    movq  %rdx, %r13       # save pstring 2 in callee save register
-   sub   $16,  %rsp       # place for the input chars
-
+   
    # call scanf for first index (i)
-   movq $format_in_int, %rdi  # the string is the first paramter passed to the scanf function.
-   movq -8(%rbp),       %rsi  # mov first place to %rsi 
-   movq $0, %rax              # initiliaze %rax
+   movq $format_in_int, %rdi    # the string is the first paramter passed to the scanf function.
+   leaq -8(%rbp), %rsi          # put in rsi the adress of $rbp-8 for scanf
+   movq $0, %rax                # initiliaze %rax
    call scanf 
    
-   xorq %rbx, %rbx
-   movl %esi, %ebx            # save first index (i) in rbx
+   xorq %rbx, %rbx              # initiliaze %rbx
+   movb -8(%rbp), %bl           # save first index (i) in bl
 
    # call scanf for first index (j)
-   movq $format_in_int, %rdi # the string is the first paramter passed to the scanf function.
-   movl -4(%rbp),       %esi # mov first place to %rsi 
-   movq $0, %rax             # initiliaze %rax
+   movq $format_in_int, %rdi   # the string is the first paramter passed to the scanf function.
+   leaq -8(%rbp), %rsi         # ut in rsi the adress of $rbp-8 for scanf
+   movq $0, %rax               # initiliaze %rax
    call scanf 
    
-   movl  %esi, %ecx       # move j to rcx 
-   movl  %ebx, %edx       # move i to ebx
-   movq  %r12, %rdi       # move pstring 1 to rdi
-   movq  %r13, %rsi       # move pstring 2 to rsi
+   movb -8(%rbp), %cl          # save second index (j) in cl
+   movb  %bl,     %dl          # move i to dl
+   movq  %r12, %rdi            # move pstring 1 to rdi
+   movq  %r13, %rsi            # move pstring 2 to rsi
    
    # increase i and j to start index in 1
-   inc %ecx
-   inc %edx  
+   inc %dl                     # inc i
+   inc %cl                     # inc j  
 
    call pstrijcpy
 
    # printing the new pstrings after replace char
-   movb  (%rax), %sil     # move size of pstring 1 to rsi 
-   leaq  1(%rax), %rdx    # move new pstring 1 to rdx          
+   xorq   %rsi,  %rsi     # initilaize rsi
+   movb  (%rax),   %sil   # move size of pstring 1 to sil 
+   leaq  1(%rax),  %rdx   # move new pstring 1 to rdx          
    movq	$format3, %rdi   # the string is the first paramter passed to the printf function.
    call  printf
 
@@ -164,35 +163,35 @@ format5:	  .string	"invalid input!\n"
   
    movq  %rsi, %r12       # save pstring 1 in callee save register
    movq  %rdx, %r13       # save pstring 2 in callee save register
-   sub   $16,  %rsp       # place for the char
 
    # call scanf for first index (i)
    movq $format_in_int, %rdi  # the string is the first paramter passed to the scanf function.
-   leaq -8(%rbp),       %rsi  # mov first place to %rsi 
+   leaq -8(%rbp),       %rsi  # put in rsi the adress of $rbp-8 for scanf
    movq $0, %rax              # initiliaze %rax
    call scanf 
    
-   xorq %rbx, %rbx
-   movl %esi, %ebx            # save first index (i) in rbx
+   xorq %rbx, %rbx            # initiliaze %rbx
+   movb -8(%rbp), %bl         # save first index (i) in bl
 
    # call scanf for first index (j)
-   movq $format_in_int, %rdi # the string is the first paramter passed to the scanf function.
-   movl -4(%rbp),       %esi # mov first place to %rsi 
-   movq $0, %rax             # initiliaze %rax
+   movq $format_in_int, %rdi  # the string is the first paramter passed to the scanf function.
+   leaq -8(%rbp),       %rsi  # put in rsi the adress of $rbp-8 for scanf
+   movq $0, %rax              # initiliaze %rax
    call scanf 
    
-   movl  %esi, %ecx       # move j to rcx 
-   movl  %ebx, %edx       # move i to ebx
-   movq  %r12, %rdi       # move pstring 1 to rdi
-   movq  %r13, %rsi       # move pstring 2 to rsi
+   movb -8(%rbp), %cl         # save second index (j) in cl
+   movb  %bl,     %dl         # move i to dl
+   movq  %r12, %rdi           # move pstring 1 to rdi
+   movq  %r13, %rsi           # move pstring 2 to rsi
    
    # increase i and j to start index in 1
-   inc %ecx
-   inc %edx  
+   inc %dl                    # inc i
+   inc %cl                    # inc j  
 
    call pstrijcmp
 
    # printing the compare reulst
+   xorq   %rsi,  %rsi     # initilaize rsi
    movl  %eax,     %esi   # move reult of compare to rsi        
    movq	$format4, %rdi   # the string is the first paramter passed to the printf function.
    call  printf
@@ -211,8 +210,9 @@ format5:	  .string	"invalid input!\n"
 # return
 .FINISH_SWITCH:
    
-   #popq %rbx              # restore %rbx
-   leave
+   movq %rbp, %rsp
+   popq %rbx              # restore %rbx
+   popq %rbp
    ret
 
 
@@ -222,9 +222,10 @@ format5:	  .string	"invalid input!\n"
 run_func:
 
     pushq   %rbp            # saving the old frame pointer.
+    pushq   %rbx            # backup callee - save %rbx
     movq    %rsp,  %rbp     # creating the new frame pointer.
-   #pushq   %rbx            # backup callee - save %rbx
-    movl    %edi,  %eax     
+    sub     $8,    %rsp     # straighte stach to 16 for scanf and printf
+    movl    %edi,  %eax     # move option argument to temp register
     sub     $50,   %eax     # sub 10 from option
     cmpl    $10,   %eax     # compare option to 10
     je      .OP_50_60       # if equal - option is 60 - go to OP_50_60

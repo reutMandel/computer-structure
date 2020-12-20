@@ -55,7 +55,9 @@ pstrijcpy:
 
    pushq  %rbp            # saving the old frame pointer.
    movq   %rsp,   %rbp    # creating the new frame pointer.
+   pushq  %rbx            # backup callee - save %rbx
    xorq   %rax,   %rax    # initilaize rax
+   movq   %rdi,   %rbx    # save dest in rbx
    movb   (%rdi), %r8b    # move rdi[0] to r8b
    movb   (%rsi), %r9b    # move rsi[0] to r9b
    cmpb    %r8b,   %dl    # compare i to size of pstring 1
@@ -76,14 +78,15 @@ pstrijcpy:
 
       cmpb  %cl, %r8b             # compare index iteration to j
       ja    .L6                   # if index interation above j - finishd - go to L6
-      movb  (%rdi,%r8,1), %r9b    # move the char in location %r8 in src to register %rb9  
-      movb  %r9b,  (%rsi,%r8,1)   # move the char in %r9 to the r8 index in dest pstring
+      movb  (%rsi,%r8,1), %r9b    # move the char in location %r8 in src to register %rb9  
+      movb  %r9b,  (%rbx,%r8,1)   # move the char in %r9 to the r8 index in dest pstring
       inc   %r8                   # increment index in 1 
       jmp   .L5
 
    .L6:
 
-      movq %rsi, %rax     # mov dest pstring to rax
+      movq %rbx, %rax     # mov dest pstring to rax - return value
+      popq %rbx            # restore %rbx
       leave
       ret
 
