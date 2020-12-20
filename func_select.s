@@ -101,7 +101,7 @@ format5:	  .string	"invalid input!\n"
 
    # call scanf for first index (j)
    movq $format_in_int, %rdi   # the string is the first paramter passed to the scanf function.
-   leaq -8(%rbp), %rsi         # ut in rsi the adress of $rbp-8 for scanf
+   leaq -8(%rbp), %rsi         # put in rsi the adress of $rbp-8 for scanf
    movq $0, %rax               # initiliaze %rax
    call scanf 
    
@@ -113,7 +113,8 @@ format5:	  .string	"invalid input!\n"
    # increase i and j to start index in 1
    inc %dl                     # inc i
    inc %cl                     # inc j  
-
+   
+   movq $0, %rax          # initiliaze %rax
    call pstrijcpy
 
    # printing the new pstrings after replace char
@@ -195,12 +196,13 @@ format5:	  .string	"invalid input!\n"
    # increase i and j to start index in 1
    inc %dl                    # inc i
    inc %cl                    # inc j  
-
+   
+   movq $0, %rax              # initiliaze %rax
    call pstrijcmp
 
    # printing the compare reulst
    xorq   %rsi,  %rsi     # initilaize rsi
-   movl  %eax,     %esi   # move reult of compare to rsi        
+   movl   %eax,  %esi     # move reult of compare to rsi        
    movq	$format4, %rdi   # the string is the first paramter passed to the printf function.
    call  printf
 
@@ -220,6 +222,8 @@ format5:	  .string	"invalid input!\n"
    
    movq %rbp, %rsp
    popq %rbx              # restore %rbx
+   popq %r12              # restore %r12
+   popq %r13              # restore %r13
    popq %rbp
    ret
 
@@ -231,8 +235,10 @@ run_func:
 
     pushq   %rbp            # saving the old frame pointer.
     pushq   %rbx            # backup callee - save %rbx
+    pushq   %r12            # backup callee - save %r12
+    pushq   %r13            # backup callee - save %r13
     movq    %rsp,  %rbp     # creating the new frame pointer.
-    sub     $8,    %rsp     # straighte stach to 16 for scanf and printf
+    sub     $8,    %rsp     # straighte stack to 16 for scanf and printf
     movl    %edi,  %eax     # move option argument to temp register
     sub     $50,   %eax     # sub 10 from option
     cmpl    $10,   %eax     # compare option to 10
