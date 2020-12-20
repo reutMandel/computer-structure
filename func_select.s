@@ -117,11 +117,19 @@ format5:	  .string	"invalid input!\n"
    call pstrijcpy
 
    # printing the new pstrings after replace char
+   # print pstring 1 - (after replace)
    xorq   %rsi,  %rsi     # initilaize rsi
    movb  (%rax),   %sil   # move size of pstring 1 to sil 
    leaq  1(%rax),  %rdx   # move new pstring 1 to rdx          
    movq	$format3, %rdi   # the string is the first paramter passed to the printf function.
    call  printf
+
+   # print pstring 2 - without change
+   xorq   %rsi,  %rsi     # initilaize rsi
+   movb  (%r13),   %sil   # move size of pstring 2 to sil 
+   leaq  1(%r13),  %rdx   # move new pstring 1 to rdx      
+   movq	$format3, %rdi   # the string is the first paramter passed to the printf function.
+   call  printf   
 
    jmp .FINISH_SWITCH
 
