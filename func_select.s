@@ -6,7 +6,7 @@ format1:	  .string	"first pstring length: %d, second pstring length: %d\n"
 format2:	  .string	"old char: %c, new char: %c, first string: %s, second string: %s\n"
 format3:   .string   "length: %d, string: %s\n"
 format4:   .string   "compare result: %d\n"
-format5:	  .string	"invalid input!\n"
+format5:	  .string	"invalid option!\n"
 
     .align 8 # Align address to multiple of 8
 .JMP_TABLE:

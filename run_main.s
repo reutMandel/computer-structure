@@ -11,85 +11,52 @@ format_in_string: .string	"%s"
 run_main:
 
 
-    pushq   %rbp                   # saving the old frame pointer.
-    pushq   %rbx                   # save rbx
-    pushq   %r12                   # save r12
-    pushq   %r13                   # save r13
-    pushq   %r14                   # save r14
-    pushq   %r15                   # save r15
-    movq    %rsp,  %rbp            # creating the new frame pointer.
-    sub     $8,    %rsp            # straighte stack to 16 for scanf and printf
+    pushq   %rbp                    # saving the old frame pointer.
+    movq    %rsp,  %rbp             # creating the new frame pointer.
+    sub     $512,  %rsp             # allocate for two pstrings
 
     # scanf first input - size of pstring 1
-    leaq  -8(%rbp), %rsi           # put in rsi the adress of $rbp-8 for scanf
-    movq $format_in_int, %rdi      # the string is the first paramter passed to the scanf function.
-    movq $0, %rax                  # initiliaze %rax
+    leaq  -256(%rbp), %rsi          # put in rsi the adress of $rbp-256 for scanf
+    movq $format_in_int, %rdi       # the string is the first paramter passed to the scanf function.
+    movq $0, %rax                   # initiliaze %rax
     call scanf
-
-    xorq %r12, %r12                # initiliaze %r12
-    movb -8(%rbp), %r12b           # save size of string 1 
 
     # scanf string 1
-    leaq  -8(%rbp), %rsi           # put in rsi the adress of $rbp-8 for scanf
-    movq $format_in_string, %rdi   # the string is the first paramter passed to the scanf function.
-    movq $0, %rax                  # initiliaze %rax
+    leaq  -255(%rbp), %rsi          # put in rsi the adress of $rbp-255 for scanf
+    movq $format_in_string, %rdi    # the string is the first paramter passed to the scanf function.
+    movq $0, %rax                   # initiliaze %rax
     call scanf
-
-    movq -8(%rbp), %r13            # save string 1
-
     
     # scanf size of pstring 2
-    leaq  -8(%rbp), %rsi           # put in rsi the adress of $rbp-8 for scanf
-    movq $format_in_int, %rdi      # the string is the first paramter passed to the scanf function.
-    movq $0, %rax                  # initiliaze %rax
+    leaq  -512(%rbp), %rsi          # put in rsi the adress of $rbp-512 for scanf
+    movq $format_in_int, %rdi       # the string is the first paramter passed to the scanf function.
+    movq $0, %rax                   # initiliaze %rax
     call scanf
-
-    xorq %r14,     %r14            # initiliaze %r14
-    movb -8(%rbp), %r14b           # save size of string 2 
 
 
     # scanf string 2
-    leaq  -8(%rbp), %rsi           # put in rsi the adress of $rbp-8 for scanf
+    leaq  -511(%rbp), %rsi         # put in rsi the adress of $rbp-511 for scanf
     movq $format_in_string, %rdi   # the string is the first paramter passed to the scanf function.
     movq $0, %rax                  # initiliaze %rax
     call scanf
 
-    movq -8(%rbp), %r15            # save string 2
 
     # scanf option
-    leaq  -8(%rbp), %rsi           # put in rsi the adress of $rbp-8 for scanf
+    sub   $16,      %rsp           # allocate for the option input in stack
+    leaq 8(%rsp),   %rsi           # put in rsi the adress of $rbp-8 for scanf
     movq $format_in_int, %rdi      # the string is the first paramter passed to the scanf function.
     movq $0, %rax                  # initiliaze %rax
     call scanf
 
-    xorq  %rcx,     %rcx           # initiliaze %rcx
-    movb -8(%rbp),  %cl            # save option
-
-
-    # insert pstring 1 to stack frame
-    xorq  %rdx,  %rdx               # initiliaze %rdx
-    pushq %r13                      # insert string 1
-    pushq %r12                      # insert size
-    movq  %rsp, %rbx                # put rbx as pointer to pstring 1
-
-    # insert pstring 2 to stack frame
-    pushq %r15                      # insert string 1
-    pushq %r14                      # insert size
-    
-    # call to run func 
-    xorq  %rdi, %rdi                # initiliaze %rdi
-    movb  %cl,  %dil                # move option for first argument
-    movq  %rbx, %rsi                # move pstring 1 as argument
-    movq  %rsp, %rdx                # move pstring 2 as argument
+    # call run cunction
+    xorq  %rdi, %rdi               # initiliaze %rdi
+    movb 8(%rsp),  %dil            # save option in first argument for functiom
+    leaq -256(%rbp), %rsi          # move pstring 1 as argument
+    leaq -512(%rbp), %rdx          # move pstring 2 as argument
 
     call run_func
 
     movq %rbp, %rsp
-    popq %rbx                       # restore rbx
-    popq %r12                       # restore r12
-    popq %r13                       # restore r13
-    popq %r14                       # restore r14
-    popq %r15                       # restore r15
     popq %rbp
     ret
 
