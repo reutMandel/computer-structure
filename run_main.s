@@ -1,5 +1,4 @@
 # 209163955 Reut Mandel
-# check with Ron Even and Yanir Buznah tests
  .section .rodata
 format_in_int: .string	    "%d"
 format_in_string: .string	"%s"

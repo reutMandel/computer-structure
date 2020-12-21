@@ -1,5 +1,4 @@
 # 209163955 Reut Mandel
-# check with Ron Even and Yanir Buznah tests
 .file "pstring.h" 
 
   .section .rodata

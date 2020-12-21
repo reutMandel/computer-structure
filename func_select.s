@@ -1,5 +1,4 @@
  # 209163955 Reut Mandel
- # check with Ron Even and Yanir Buznah tests
    .section .rodata
 format_in_char: .string	" %c"
 format_in_int:  .string	"%d"
@@ -40,6 +39,7 @@ format5:	  .string	"invalid option!\n"
    
    # printing the two length of the pstrings
    movq	$format1, %rdi # the string is the first paramter passed to the printf function.
+    movq  $0, %rax        # initiliaze %rax
    call  printf
    jmp .FINISH_SWITCH
 
@@ -82,6 +82,7 @@ format5:	  .string	"invalid option!\n"
    leaq  1(%r12),  %rcx        # move new pstring 1 to rcx
    leaq  1(%rax),  %r8         # move new pstring 2 to r8
    movq	$format2, %rdi        # the string is the first paramter passed to the printf function.
+   movq  $0, %rax              # initiliaze %rax
    call  printf
    
    jmp .FINISH_SWITCH
@@ -125,6 +126,7 @@ format5:	  .string	"invalid option!\n"
    movb  (%rax),   %sil   # move size of pstring 1 to sil 
    leaq  1(%rax),  %rdx   # move new pstring 1 to rdx          
    movq	$format3, %rdi   # the string is the first paramter passed to the printf function.
+   movq  $0, %rax         # initiliaze %rax
    call  printf
 
    # print pstring 2 - without change
@@ -132,6 +134,7 @@ format5:	  .string	"invalid option!\n"
    movb  (%r13),   %sil   # move size of pstring 2 to sil 
    leaq  1(%r13),  %rdx   # move new pstring 1 to rdx      
    movq	$format3, %rdi   # the string is the first paramter passed to the printf function.
+   movq  $0, %rax         # initiliaze %rax
    call  printf   
 
    jmp .FINISH_SWITCH
@@ -158,6 +161,7 @@ format5:	  .string	"invalid option!\n"
    xorq   %rsi,  %rsi     # initilaize rsi
    movb  (%r12), %sil     # move size of pstring 1 to rsi     
    leaq  1(%r12), %rdx    # move new pstring 1 to rdx 
+   movq  $0, %rax         # initiliaze %rax
    call  printf
 
    # printing pstring 2
@@ -165,6 +169,7 @@ format5:	  .string	"invalid option!\n"
    xorq   %rsi,  %rsi      # initilaize rsi
    movb  (%rbx),   %sil    # move size of pstring 1 to rsi     
    leaq  1(%rbx),  %rdx    # move new pstring 1 to rdx 
+   movq  $0, %rax          # initiliaze %rax
    call  printf
 
    jmp .FINISH_SWITCH
@@ -206,6 +211,7 @@ format5:	  .string	"invalid option!\n"
    xorq   %rsi,  %rsi     # initilaize rsi
    movl   %eax,  %esi     # move reult of compare to rsi        
    movq	$format4, %rdi   # the string is the first paramter passed to the printf function.
+   movq  $0, %rax        # initiliaze %rax
    call  printf
 
    jmp .FINISH_SWITCH
@@ -215,8 +221,8 @@ format5:	  .string	"invalid option!\n"
    
    # print invalid input
    movq	$format5, %rdi   # the string is the first paramter passed to the printf function.
+   movq  $0, %rax         # initiliaze %rax
    call  printf
-
    jmp .FINISH_SWITCH
 
 # return
