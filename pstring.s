@@ -1,7 +1,8 @@
 # 209163955 Reut Mandel
+# used Ron Even and Yanir Buznah tests
 .file "pstring.h" 
 
-     .section .rodata
+  .section .rodata
 format1:	  .string	"invalid input!\n"
 
  .text	# the beginning of the code.

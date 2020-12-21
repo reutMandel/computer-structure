@@ -1,5 +1,6 @@
  # 209163955 Reut Mandel
-    .section .rodata
+ # check with Ron Even and Yanir Buznah tests
+   .section .rodata
 format_in_char: .string	" %c"
 format_in_int:  .string	"%d"
 format1:	  .string	"first pstring length: %d, second pstring length: %d\n"
