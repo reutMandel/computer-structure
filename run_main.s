@@ -1,3 +1,4 @@
+ # 209163955 Reut Mandel
  .section .rodata
 format_in_int: .string	    "%d"
 format_in_string: .string	"%s"
@@ -66,19 +67,12 @@ run_main:
 
 
     # insert pstring 1 to stack frame
-    xorq  %rdx, %rdx                # initiliaze %rdx
-    movb  %r12b, %dl                # move size of string 1
-    add   $2,   %dl                 # prepare index for the size of stack
-    subq  %rdx,  %rsp               # create place to pstring 1
+    xorq  %rdx,  %rdx               # initiliaze %rdx
     pushq %r13                      # insert string 1
     pushq %r12                      # insert size
     movq  %rsp, %rbx                # put rbx as pointer to pstring 1
 
     # insert pstring 2 to stack frame
-    xorq  %rdx, %rdx                # initiliaze %rdx
-    movb  %r14b, %dl                # move size of string 2
-    add   $2,  %dl                  # prepare index for the size of stack
-    subq  %rdx,  %rsp               # create place to pstring 2
     pushq %r15                      # insert string 1
     pushq %r14                      # insert size
     
@@ -89,7 +83,6 @@ run_main:
     movq  %rsp, %rdx                # move pstring 2 as argument
 
     call run_func
-
 
     movq %rbp, %rsp
     popq %rbx                       # restore rbx
